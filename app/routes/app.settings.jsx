@@ -1,5 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import {
   Page,
   Layout,
@@ -47,6 +48,15 @@ export const action = async ({ request }) => {
 
 export default function Settings() {
   const { config } = useLoaderData();
+  const [phoneNumberId, setPhoneNumberId] = useState(
+    config?.phoneNumberId || ""
+  );
+  const [token, setToken] = useState(config?.token || "");
+  const [templateName, setTemplateName] = useState(config?.templateName || "");
+  const [templateParams, setTemplateParams] = useState(
+    config?.templateParams || ""
+  );
+  const [enabled, setEnabled] = useState(config?.enabled ?? true);
   return (
     <Page>
       <TitleBar title="WhatsApp settings" />
@@ -58,32 +68,37 @@ export default function Settings() {
                 <TextField
                   name="phoneNumberId"
                   label="Phone number ID"
-                  defaultValue={config?.phoneNumberId || ""}
+                  value={phoneNumberId}
+                  onChange={setPhoneNumberId}
                   autoComplete="off"
                 />
                 <TextField
                   name="token"
                   label="Access token"
-                  defaultValue={config?.token || ""}
+                  value={token}
+                  onChange={setToken}
                   autoComplete="off"
                 />
                 <TextField
                   name="templateName"
                   label="Template name"
-                  defaultValue={config?.templateName || ""}
+                  value={templateName}
+                  onChange={setTemplateName}
                   autoComplete="off"
                 />
                 <TextField
                   name="templateParams"
                   label="Template parameters (comma separated)"
                   helpText="Example: name,total_price"
-                  defaultValue={config?.templateParams || ""}
+                  value={templateParams}
+                  onChange={setTemplateParams}
                   autoComplete="off"
                 />
                 <Checkbox
                   label="Enable notifications"
                   name="enabled"
-                  defaultChecked={config?.enabled}
+                  checked={enabled}
+                  onChange={setEnabled}
                 />
                 <InlineStack>
                   <Button submit primary>
