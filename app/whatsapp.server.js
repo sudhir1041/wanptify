@@ -4,20 +4,20 @@ function getValue(obj, path) {
   return path.split(".").reduce((acc, part) => acc?.[part], obj);
 }
 
-async function sendWhatsAppTemplate({ config, phone, params }) {
-  const url = `https://graph.facebook.com/v18.0/${config.phoneNumberId}/messages`;
+async function sendWhatsAppTemplate({ config: cfg, phone, params }) {
+  const url = `https://graph.facebook.com/v18.0/${cfg.phoneNumberId}/messages`;
   await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${config.token}`,
+      Authorization: `Bearer ${cfg.token}`,
     },
     body: JSON.stringify({
       messaging_product: "whatsapp",
       to: phone,
       type: "template",
       template: {
-        name: config.templateName,
+        name: cfg.templateName,
         language: { code: "en_US" },
         components: [
           {
