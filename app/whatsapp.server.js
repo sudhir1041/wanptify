@@ -4,7 +4,7 @@ export async function sendWhatsAppMessage({ shop, phone, message }) {
   const config = await prisma.whatsAppConfig.findUnique({ where: { shop } });
   if (!config || !config.enabled) return;
 
-  const url = `https://graph.facebook.com/v18.0/${config.phoneNumberId}/messages`;
+  const url = `https://graph.facebook.com/v21.0/${config.phoneNumberId}/messages`;
   await fetch(url, {
     method: "POST",
     headers: {

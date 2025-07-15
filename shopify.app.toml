@@ -3,7 +3,7 @@
 client_id = "15f64a2effe5e7fc24f42298ce864c9f"
 name = "WaNotify"
 handle = "wanotify"
-application_url = "https://marie-appeared-executed-fair.trycloudflare.com"
+application_url = "https://type-boring-cardiff-outdoors.trycloudflare.com"
 embedded = true
 
 [build]
@@ -34,7 +34,7 @@ api_version = "2025-07"
 scopes = "write_products"
 
 [auth]
-redirect_urls = ["https://marie-appeared-executed-fair.trycloudflare.com/auth/callback", "https://marie-appeared-executed-fair.trycloudflare.com/auth/shopify/callback", "https://marie-appeared-executed-fair.trycloudflare.com/api/auth/callback"]
+redirect_urls = ["https://type-boring-cardiff-outdoors.trycloudflare.com/auth/callback", "https://type-boring-cardiff-outdoors.trycloudflare.com/auth/shopify/callback", "https://type-boring-cardiff-outdoors.trycloudflare.com/api/auth/callback"]
 
 [pos]
 embedded = false
