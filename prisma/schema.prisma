@@ -30,3 +30,11 @@ model Session {
   collaborator  Boolean?  @default(false)
   emailVerified Boolean?  @default(false)
 }
+
+model WhatsAppConfig {
+  id            Int     @id @default(autoincrement())
+  shop          String  @unique
+  phoneNumberId String
+  token         String
+  enabled       Boolean @default(true)
+}
