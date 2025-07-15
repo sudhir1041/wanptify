@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Page,
   Layout,
@@ -75,6 +75,18 @@ export default function Settings() {
   const [sendOnFulfillmentCreate, setSendOnFulfillmentCreate] = useState(
     config?.sendOnFulfillmentCreate ?? false
   );
+
+  useEffect(() => {
+    setPhoneNumberId(config?.phoneNumberId || "");
+    setToken(config?.token || "");
+    setTemplateName(config?.templateName || "");
+    setTemplateParams(
+      config?.templateParams || "name,order_id,total_amount,products"
+    );
+    setEnabled(config?.enabled ?? true);
+    setSendOnOrderCreate(config?.sendOnOrderCreate ?? true);
+    setSendOnFulfillmentCreate(config?.sendOnFulfillmentCreate ?? false);
+  }, [config]);
   return (
     <Page>
       <TitleBar title="WhatsApp settings" />
