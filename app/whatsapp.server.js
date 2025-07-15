@@ -35,21 +35,44 @@ async function sendWhatsAppTemplate({ config: cfg, phone, params }) {
 
 export async function sendOrderNotification(shop, order) {
   const config = await prisma.whatsAppConfig.findUnique({ where: { shop } });
-  if (!config || !config.enabled || !config.templateName) return;
+  if (
+    !config ||
+    !config.enabled ||
+    !config.templateName ||
+    !config.sendOnOrderCreate
+  )
+    return;
   const phone = order.phone || order.customer?.phone;
   if (!phone) return;
-  const params =
-    config.templateParams?.split(",").map((p) => getValue(order, p.trim())) || [];
+  const params = config.templateParams
+    ? config.templateParams.split(",").map((p) => getValue(order, p.trim()))
+    : [
+        order.name,
+        order.id,
+        order.total_price,
+        order.line_items?.map((i) => i.title).join(", "),
+      ];
   await sendWhatsAppTemplate({ config, phone, params });
 }
 
 export async function sendFulfillmentNotification(shop, fulfillment) {
   const config = await prisma.whatsAppConfig.findUnique({ where: { shop } });
-  if (!config || !config.enabled || !config.templateName) return;
+  if (
+    !config ||
+    !config.enabled ||
+    !config.templateName ||
+    !config.sendOnFulfillmentCreate
+  )
+    return;
   const phone = fulfillment.order?.phone || fulfillment.order?.customer?.phone;
   if (!phone) return;
-  const params =
-    config.templateParams?.split(",").map((p) => getValue(fulfillment, p.trim())) ||
-    [];
+  const params = config.templateParams
+    ? config.templateParams.split(",").map((p) => getValue(fulfillment, p.trim()))
+    : [
+        fulfillment.order?.name,
+        fulfillment.order?.id,
+        fulfillment.order?.total_price,
+        fulfillment.line_items?.map((l) => l.title).join(", "),
+      ];
   await sendWhatsAppTemplate({ config, phone, params });
 }

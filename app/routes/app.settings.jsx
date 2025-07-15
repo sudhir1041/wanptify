@@ -29,16 +29,28 @@ export const action = async ({ request }) => {
   const phoneNumberId = form.get("phoneNumberId") || "";
   const token = form.get("token") || "";
   const enabled = form.get("enabled") === "on";
+  const sendOnOrderCreate = form.get("sendOnOrderCreate") === "on";
+  const sendOnFulfillmentCreate = form.get("sendOnFulfillmentCreate") === "on";
   const templateName = form.get("templateName") || "";
   const templateParams = form.get("templateParams") || "";
   await prisma.whatsAppConfig.upsert({
     where: { shop: session.shop },
-    update: { phoneNumberId, token, enabled, templateName, templateParams },
+    update: {
+      phoneNumberId,
+      token,
+      enabled,
+      sendOnOrderCreate,
+      sendOnFulfillmentCreate,
+      templateName,
+      templateParams,
+    },
     create: {
       shop: session.shop,
       phoneNumberId,
       token,
       enabled,
+      sendOnOrderCreate,
+      sendOnFulfillmentCreate,
       templateName,
       templateParams,
     },
@@ -54,9 +66,15 @@ export default function Settings() {
   const [token, setToken] = useState(config?.token || "");
   const [templateName, setTemplateName] = useState(config?.templateName || "");
   const [templateParams, setTemplateParams] = useState(
-    config?.templateParams || ""
+    config?.templateParams || "name,order_id,total_amount,products"
   );
   const [enabled, setEnabled] = useState(config?.enabled ?? true);
+  const [sendOnOrderCreate, setSendOnOrderCreate] = useState(
+    config?.sendOnOrderCreate ?? true
+  );
+  const [sendOnFulfillmentCreate, setSendOnFulfillmentCreate] = useState(
+    config?.sendOnFulfillmentCreate ?? false
+  );
   return (
     <Page>
       <TitleBar title="WhatsApp settings" />
@@ -89,7 +107,7 @@ export default function Settings() {
                 <TextField
                   name="templateParams"
                   label="Template parameters (comma separated)"
-                  helpText="Example: name,total_price"
+                  helpText="Defaults to name,order_id,total_amount,products"
                   value={templateParams}
                   onChange={setTemplateParams}
                   autoComplete="off"
@@ -99,6 +117,18 @@ export default function Settings() {
                   name="enabled"
                   checked={enabled}
                   onChange={setEnabled}
+                />
+                <Checkbox
+                  label="Send on order creation"
+                  name="sendOnOrderCreate"
+                  checked={sendOnOrderCreate}
+                  onChange={setSendOnOrderCreate}
+                />
+                <Checkbox
+                  label="Send on order dispatch"
+                  name="sendOnFulfillmentCreate"
+                  checked={sendOnFulfillmentCreate}
+                  onChange={setSendOnFulfillmentCreate}
                 />
                 <InlineStack>
                   <Button submit primary>

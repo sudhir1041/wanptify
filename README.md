@@ -67,10 +67,8 @@ Local development is powered by [the Shopify CLI](https://shopify.dev/docs/apps/
 1. Create a [WhatsApp Business Cloud](https://developers.facebook.com/docs/whatsapp/cloud-api) account and obtain a phone number ID and access token.
 2. In your Shopify admin, open the **Settings** page of this app and enter the phone number ID and token.
 3. Create a WhatsApp message template in Meta. Note the template name and the parameters used in the body.
-4. On the **Settings** page, specify the template name and a comma separated list of payload fields to use as parameters. For example `name,total_price` will pass the order name as `{{1}}` and total price as `{{2}}`.
-5. Enable notifications and save your settings.
-
-When an order is created or fulfilled, the app will send a template message to the phone number on the order using the configured template. Up to six parameters are supported.
+4. Choose which order events should trigger a message (creation and/or dispatch) and enter the template name. By default the template parameters `name,order_id,total_amount,products` are sent. You can override them with a comma separated list of order fields.
+5. Save the settings. When the selected events occur the app sends the message using your template. Up to six parameters are supported.
 
 ### Authenticating and querying data
 
