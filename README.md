@@ -189,7 +189,7 @@ If you get this error:
 The table `main.Session` does not exist in the current database.
 ```
 
-You need to create the database for Prisma. Run the `setup` script in `package.json` using your preferred package manager.
+Run the `setup` script in `package.json` using your preferred package manager. This creates the database tables and also applies any new migrations when you pull updates. Re-running this command also regenerates the Prisma client, which fixes errors like `Unknown argument` when the schema has changed.
 
 ### Navigating/redirecting breaks an embedded app
 
