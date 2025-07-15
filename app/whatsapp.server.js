@@ -1,9 +1,10 @@
 import prisma from "./db.server";
 
-export async function sendWhatsAppMessage({ shop, phone, message }) {
-  const config = await prisma.whatsAppConfig.findUnique({ where: { shop } });
-  if (!config || !config.enabled) return;
+function getValue(obj, path) {
+  return path.split(".").reduce((acc, part) => acc?.[part], obj);
+}
 
+async function sendWhatsAppTemplate({ config, phone, params }) {
   const url = `https://graph.facebook.com/v18.0/${config.phoneNumberId}/messages`;
   await fetch(url, {
     method: "POST",
@@ -14,29 +15,41 @@ export async function sendWhatsAppMessage({ shop, phone, message }) {
     body: JSON.stringify({
       messaging_product: "whatsapp",
       to: phone,
-      type: "text",
-      text: { body: message },
+      type: "template",
+      template: {
+        name: config.templateName,
+        language: { code: "en_US" },
+        components: [
+          {
+            type: "body",
+            parameters: params.slice(0, 6).map((text) => ({
+              type: "text",
+              text: String(text ?? ""),
+            })),
+          },
+        ],
+      },
     }),
   });
 }
 
 export async function sendOrderNotification(shop, order) {
+  const config = await prisma.whatsAppConfig.findUnique({ where: { shop } });
+  if (!config || !config.enabled || !config.templateName) return;
   const phone = order.phone || order.customer?.phone;
   if (!phone) return;
-  await sendWhatsAppMessage({
-    shop,
-    phone,
-    message: `Your order ${order.name} was placed successfully.`,
-  });
+  const params =
+    config.templateParams?.split(",").map((p) => getValue(order, p.trim())) || [];
+  await sendWhatsAppTemplate({ config, phone, params });
 }
 
 export async function sendFulfillmentNotification(shop, fulfillment) {
-  const phone =
-    fulfillment.order?.phone || fulfillment.order?.customer?.phone;
+  const config = await prisma.whatsAppConfig.findUnique({ where: { shop } });
+  if (!config || !config.enabled || !config.templateName) return;
+  const phone = fulfillment.order?.phone || fulfillment.order?.customer?.phone;
   if (!phone) return;
-  await sendWhatsAppMessage({
-    shop,
-    phone,
-    message: `Your order ${fulfillment.order?.name} has been fulfilled.`,
-  });
+  const params =
+    config.templateParams?.split(",").map((p) => getValue(fulfillment, p.trim())) ||
+    [];
+  await sendWhatsAppTemplate({ config, phone, params });
 }

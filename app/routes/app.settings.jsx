@@ -28,10 +28,19 @@ export const action = async ({ request }) => {
   const phoneNumberId = form.get("phoneNumberId") || "";
   const token = form.get("token") || "";
   const enabled = form.get("enabled") === "on";
+  const templateName = form.get("templateName") || "";
+  const templateParams = form.get("templateParams") || "";
   await prisma.whatsAppConfig.upsert({
     where: { shop: session.shop },
-    update: { phoneNumberId, token, enabled },
-    create: { shop: session.shop, phoneNumberId, token, enabled },
+    update: { phoneNumberId, token, enabled, templateName, templateParams },
+    create: {
+      shop: session.shop,
+      phoneNumberId,
+      token,
+      enabled,
+      templateName,
+      templateParams,
+    },
   });
   return redirect("/app/settings");
 };
@@ -56,6 +65,19 @@ export default function Settings() {
                   name="token"
                   label="Access token"
                   defaultValue={config?.token || ""}
+                  autoComplete="off"
+                />
+                <TextField
+                  name="templateName"
+                  label="Template name"
+                  defaultValue={config?.templateName || ""}
+                  autoComplete="off"
+                />
+                <TextField
+                  name="templateParams"
+                  label="Template parameters (comma separated)"
+                  helpText="Example: name,total_price"
+                  defaultValue={config?.templateParams || ""}
                   autoComplete="off"
                 />
                 <Checkbox

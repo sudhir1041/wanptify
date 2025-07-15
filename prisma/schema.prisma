@@ -37,4 +37,6 @@ model WhatsAppConfig {
   phoneNumberId String
   token         String
   enabled       Boolean @default(true)
+  templateName  String?
+  templateParams String?
 }

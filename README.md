@@ -62,6 +62,16 @@ Press P to open the URL to your app. Once you click install, you can start devel
 
 Local development is powered by [the Shopify CLI](https://shopify.dev/docs/apps/tools/cli). It logs into your partners account, connects to an app, provides environment variables, updates remote config, creates a tunnel and provides commands to generate extensions.
 
+## WhatsApp Notification Setup
+
+1. Create a [WhatsApp Business Cloud](https://developers.facebook.com/docs/whatsapp/cloud-api) account and obtain a phone number ID and access token.
+2. In your Shopify admin, open the **Settings** page of this app and enter the phone number ID and token.
+3. Create a WhatsApp message template in Meta. Note the template name and the parameters used in the body.
+4. On the **Settings** page, specify the template name and a comma separated list of payload fields to use as parameters. For example `name,total_price` will pass the order name as `{{1}}` and total price as `{{2}}`.
+5. Enable notifications and save your settings.
+
+When an order is created or fulfilled, the app will send a template message to the phone number on the order using the configured template. Up to six parameters are supported.
+
 ### Authenticating and querying data
 
 To authenticate and query data you can use the `shopify` const that is exported from `/app/shopify.server.js`:
