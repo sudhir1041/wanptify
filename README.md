@@ -52,6 +52,8 @@ Using npm:
 npm run dev
 ```
 
+The development script automatically runs `npm run setup` to ensure the database schema and Prisma client are up to date.
+
 Using pnpm:
 
 ```shell
@@ -67,8 +69,8 @@ Local development is powered by [the Shopify CLI](https://shopify.dev/docs/apps/
 1. Create a [WhatsApp Business Cloud](https://developers.facebook.com/docs/whatsapp/cloud-api) account and obtain a phone number ID and access token.
 2. In your Shopify admin, open the **Settings** page of this app and enter the phone number ID and token.
 3. Create a WhatsApp message template in Meta. Note the template name and the parameters used in the body.
-4. Choose which order events should trigger a message (creation and/or dispatch) and enter the template name. By default the template parameters `name,order_id,total_amount,products` are sent. You can override them with a comma separated list of order fields.
-5. Save the settings. When the selected events occur the app sends the message using your template. Up to six parameters are supported.
+4. Choose which order events should trigger a message (creation and/or dispatch) and enter the template name. You can optionally provide a comma‑separated list of fields from the webhook payload that map to your template parameters. If left blank, the defaults `name,order_id,total_amount,products` are used.
+5. Save the settings. When the selected events occur the app sends the message using your template. Up to six parameters are supported. For example, a shipping confirmation template might use `customer.first_name,name,fulfillments.0.tracking_number,fulfillments.0.tracking_urls.0`.
 
 ### Authenticating and querying data
 
